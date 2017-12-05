@@ -124,13 +124,18 @@
 			$role = $this->user->role;
 			
 			if (!$this->user) {
-				$this->error = "User not specified. Unable to get document.";
-				return array($documents, $this->error);
+				$this->error = "User not specified. Unable to get children.";
+				return array($children, $this->error);
 			}
 		
 			if (! $this->mysqli) {
 				$this->error = "No connection to database.";
-				return array($documents, $this->error);
+				return array($children, $this->error);
+			}
+			
+			if (!$role) {
+				$this->error = "No user role specified. Unable to get children.";
+				return array($children, $this->error);
 			}
 
 			//make a switch with every role, sql statement would change based on role 
@@ -139,75 +144,80 @@
 					$stmt = $this->mysqli->prepare("SELECT * FROM children WHERE caseManagerID = ?");
 					if (! ($stmt->bind_param("i", $this->user->workerID)) ) {
 						$this->error = "Prepare failed: " . $this->mysqli->error;
-						return array($documents, $this->error);
+						return array($children, $this->error);
 					}
 					break;
 				case 'case worker':
 					$stmt = $this->mysqli->prepare("SELECT * FROM children WHERE caseWorkerID = ?");
 					if (! ($stmt->bind_param("i", $this->user->workerID)) ) {
 						$this->error = "Prepare failed: " . $this->mysqli->error;
-						return array($documents, $this->error);
+						return array($children, $this->error);
 					}
 					break;
 				case 'therapist':
 					$stmt = $this->mysqli->prepare("SELECT * FROM children WHERE therapistID = ?");
 					if (! ($stmt->bind_param("i", $this->user->workerID)) ) {
 						$this->error = "Prepare failed: " . $this->mysqli->error;
-						return array($documents, $this->error);
+						return array($children, $this->error);
 					}
 					break;
 				case 'psychiatrist':
 					$stmt = $this->mysqli->prepare("SELECT * FROM children WHERE psychiatristID = ?");
 					if (! ($stmt->bind_param("i", $this->user->workerID)) ) {
 						$this->error = "Prepare failed: " . $this->mysqli->error;
-						return array($documents, $this->error);
+						return array($children, $this->error);
 					}
 					break;
 				case 'doctor':
 					$stmt = $this->mysqli->prepare("SELECT * FROM children WHERE doctorID = ?");
 					if (! ($stmt->bind_param("i", $this->user->workerID)) ) {
 						$this->error = "Prepare failed: " . $this->mysqli->error;
-						return array($documents, $this->error);
+						return array($children, $this->error);
 					}
 					break;
 				case 'foster parent':
 					$stmt = $this->mysqli->prepare("SELECT * FROM children WHERE fosterParent1ID = ? OR fosterParent2ID = ?");
 					if (! ($stmt->bind_param("ii", $this->user->workerID, $this->user->workerID)) ) {
 						$this->error = "Prepare failed: " . $this->mysqli->error;
-						return array($documents, $this->error);
+						return array($children, $this->error);
 					}
 					break;
 				case 'biological parent':
 					$stmt = $this->mysqli->prepare("SELECT * FROM children WHERE biologicalParent1ID = ? OR biologicalParent2ID = ?");
 					if (! ($stmt->bind_param("ii", $this->user->workerID, $this->user->workerID)) ) {
 						$this->error = "Prepare failed: " . $this->mysqli->error;
-						return array($documents, $this->error);
+						return array($children, $this->error);
 					}
 					break;
+				default:
+					$this->error = "Could not find role. Unable to get children";
+					return array($children, $this->error);
+					break;
+                        }
 				
 			if (! ($stmt->bind_param("i", $this->user->workerID)) ) {
 				$this->error = "Prepare failed: " . $this->mysqli->error;
-				return array($documents, $this->error);
+				return array($children, $this->error);
 			}		
 			
 			if (! $stmt->execute() ) {
 				$this->error = "Execute of statement failed: " . $stmt->error;
-				return array($documents, $this->error);
+				return array($children, $this->error);
 			}
 			if (! ($result = $stmt->get_result()) ) {
 				$this->error = "Getting result failed: " . $stmt->error;
-				return array($documents, $this->error);
+				return array($children, $this->error);
 			}
 			
 			if ($result->num_rows > 0) {
 				while($row = $result->fetch_assoc()) {
-					array_push($documents, $row);
+					array_push($children, $row);
 				}
 			}
 			
 			$stmt->close();
 			
-			return array($documents, $this->error);
+			return array($children, $this->error);
 		}
 		
 		//gets the info for the selected child so it can be loaded for editing
@@ -267,12 +277,12 @@
 		
 			if (! $this->mysqli) {
 				$this->error = "No connection to database.";
-				return array($child, $this->error);
+				return array($document, $this->error);
 			}
 			
 			if (! $id) {
 				$this->error = "No id specified for document to retrieve.";
-				return array($child, $this->error);
+				return array($document, $this->error);
 			}
 			
 			
@@ -280,19 +290,19 @@
 			
 			if (! ($stmt->bind_param("i", $id)) ) {
 				$this->error = "Prepare failed: " . $this->mysqli->error;
-				return array($child, $this->error);
+				return array($document, $this->error);
 			}
 			if (! $stmt->execute() ) {
 				$this->error = "Execute of statement failed: " . $stmt->error;
-				return array($child, $this->error);
+				return array($document, $this->error);
 			}
 			if (! ($result = $stmt->get_result()) ) {
 				$this->error = "Getting result failed: " . $stmt->error;
-				return array($child, $this->error);
+				return array($document, $this->error);
 			}
 			
 			if ($result->num_rows > 0) {
-				$child = $result->fetch_assoc();
+				$document = $result->fetch_assoc();
 			}
 			
 			$stmt->close();
@@ -409,7 +419,7 @@
 			}
 			
 			if ($this->user->role != 'case manager'){
-				$this->error = "User do not have permission to update. Unable to update child."
+				$this->error = "User do not have permission to update. Unable to update child.";
 			}
 			
 			$id = $data['id'];
@@ -484,7 +494,7 @@
 				return $this->error;			
 			}
 			
-			//need to error check for each not null variable
+			
 			if (! $documentText) {
 				$this->error = "No note text found for note to update. A note text is required.";
 				return $this->error;			
