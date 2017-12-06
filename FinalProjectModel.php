@@ -90,7 +90,7 @@
 			}
 
 			//I think this SQL statement gets us what we need
-			$stmt = $this->mysqli->prepare("SELECT * FROM documents WHERE childID = ? ORDER BY uploadTime DESC");
+			$stmt = $this->mysqli->prepare("SELECT * FROM documents INNER JOIN workers ON documents.uploaderID = workers.workerID WHERE childID = ? ORDER BY uploadTime DESC");
 			if (! ($stmt->bind_param("i", $id)) ) {
 				$this->error = "Prepare failed: " . $this->mysqli->error;
 				return array($documents, $this->error);
