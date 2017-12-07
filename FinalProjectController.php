@@ -13,7 +13,7 @@
 		private $id = null;
 	
 		public function __construct() {
-			$this->model = new FinalProjectModelModel();
+			$this->model = new FinalProjectModel();
 			$this->views = new FinalProjectViews();
 			
 			$this->view = $_GET['view'] ? $_GET['view'] : 'loginview';
