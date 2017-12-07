@@ -1,5 +1,5 @@
 <?php
-	class TasksViews {
+	class FinalProjectViews {
 		private $stylesheet = 'FinalProjectStyle.css';
 		private $pageTitle = 'Permanency Team';
 		
@@ -12,16 +12,16 @@
 		}
 		
 		public function childrenView($user, $children, $message = '') {
-			$body = "<h1>Tasks for {$user->firstName} {$user->lastName}</h1>\n";
+			$body = "<h1>Children for {$user->firstName} {$user->lastName}</h1>\n";
 		
 			if ($message) {
 				$body .= "<p class='message'>$message</p>\n";
 			}
 		
-			$body .= "<p><a class='taskButton' href='index.php?view=child'>+ Add Child</a>";
+			$body .= "<p><a href='index.php?view=child'>+ Add Child</a>";
 	
 			if (count($children) < 1) {
-				$body .= "<p>No tasks to display!</p>\n";
+				$body .= "<p>No children to display!</p>\n";
 				return $this->page($body);
 			}
 	
@@ -175,7 +175,7 @@ EOT2;
 				$username = $data['username'];
 			}
 		
-			$body = "<h1>Tasks</h1>\n";
+			$body = "<h1>Permanency Team</h1>\n";
 			
 			if ($message) {
 				$body .= "<p class='message'>$message</p>\n";
