@@ -18,7 +18,7 @@
 				$body .= "<p class='message'>$message</p>\n";
 			}
 		
-			$body .= "<p><a href='index.php?view=child'>+ Add Child</a>";
+			$body .= "<p><a href='index.php?view=addChildView'>+ Add Child</a>";
 	
 			if (count($children) < 1) {
 				$body .= "<p>No children to display!</p>\n";
