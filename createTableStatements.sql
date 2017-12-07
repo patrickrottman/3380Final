@@ -12,7 +12,7 @@ CREATE TABLE children (
 	fosterParent1ID INT,
 	fosterParent2ID INT,
 	biologicalParent1ID INT,
-	biologicalParent2ID INT,
+	biologicalParent2ID INT
 );
 
 CREATE TABLE workers (
