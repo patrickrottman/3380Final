@@ -1,10 +1,10 @@
 # 3380Final
 
 ## Team Members
-Shravan Dommaraju
-Andrew Muenks
-Patrick Rottman
-Jenny Zulovich
+Shravan Dommaraju<br>
+Andrew Muenks<br>
+Patrick Rottman<br>
+Jenny Zulovich<br>
 
 ## Description
 
@@ -27,3 +27,23 @@ Jenny Zulovich
 |fosterParent2ID      |int(11)       |YES    |       |*NULL*     |               |
 |biologicalParent1ID  |int(11)       |YES    |       |*NULL*     |               |
 |biologicalParent2ID  |int(11)       |YES    |       |*NULL*     |               |
+
+### Documents
+|Field          |Type          |Null   |Key    |Default    |Extra          |
+|---------------|--------------|-------|-------|-----------|---------------|
+|id             |int(11)       |NO     |PRI    |*NULL*     |auto_increment |
+|childID        |int(11)       |NO     |       |*NULL*     |               |
+|uploaderID     |int(11)       |NO     |       |*NULL*     |               |
+|documentText   |mediumtext    |NO     |       |*NULL*     |               |
+|uploadTime     |datetime      |NO     |       |*NULL*     |               |
+
+### Workers
+|Field       |Type          |Null   |Key    |Default    |Extra          |
+|------------|--------------|-------|-------|-----------|---------------|
+|id          |int(11)       |NO     |PRI    |*NULL*     |auto_increment |
+|role        |enum('case manager','case worker','therapist','psychiatrist','doctor', 'foster parent', 'biological parent'              |NO     |       |*NULL*     |               |
+|username    |varchar(255)  |NO     |UNI    |*NULL*     |               |
+|password    |varchar(255)  |NO     |       |*NULL*     |               |
+|firstName   |varchar(128)  |NO     |       |*NULL*     |               |
+|middleName  |varchar(128)  |YES    |       |*NULL*     |               |
+|lastName    |varchar(128)  |NO     |       |*NULL*     |               |
