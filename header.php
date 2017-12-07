@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
 <style>
     .navbar {
 
@@ -13,13 +15,8 @@
         </div>
         <ul class="nav justify-content-end">
             <li class="nav-item">
-                <a class="nav-link active" href="#">Foster Children</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Add Child</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Your Account</a>
+                <!--<a class="nav-link" href="#">Log Out</a>-->
+                <form action='index.php' method='post'><input class="btn btn-danger" type='submit' name='action' value='logout' /></form>
             </li>
         </ul>
     </div>
