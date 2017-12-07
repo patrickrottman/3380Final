@@ -262,7 +262,7 @@
 		}	
 		
 		//gets the info for the selected child so it can be loaded for editing
-		public function getChildForEdit($id) { //$id comes from POST when child is clicked
+		public function getChild($id) { //$id comes from POST when child is clicked
 			$this->error = '';
 			$child = null;
 			
