@@ -41,28 +41,28 @@
 				case 'logout':
 					$this->handleLogout();
 					break;
-				case 'showchild'
+				case 'showchild':
 					$this->handleShowChild();
 					break;
-				case 'addchild'
+				case 'addchild':
 					$this->handleAddChild();
 					break;
-				case 'editchild'
+				case 'editchild':
 					$this->handleEditChild();
 					break;
-				case 'updatechild'
+				case 'updatechild':
 					$this->handleUpDateChild();
 					break;
-				case 'adddocument'
-					$this->handleAddDocument()
+				case 'adddocument':
+					$this->handleAddDocument();
 					break;
-				case 'editDocument'
+				case 'editDocument':
 					$this->handleEditDocument();
 					break;
-				case 'updateDocument'
+				case 'updateDocument':
 					$this->handleUpdateDocument();
 					break;
-				case 'deletedocument'
+				case 'deletedocument':
 					$this->handleDeleteDocument();
 					break;
 				default:
@@ -108,21 +108,21 @@
 					
 					print $this->views->addChildView($this->model->getUser(), 
 								$caseWorkers,
-								$therapists
-								$psychiatrists
-								$doctors
-								$fosterParents
-								$biologicalParents
+								$therapists,
+								$psychiatrists,
+								$doctors,
+								$fosterParents,
+								$biologicalParents,
 								$this->data, $this->message);
 					break;
 					
 					
-				case 'adddocumentform'
+				case 'adddocumentform':
 					print $this->views->addDocumentView($this->model->getUser(), $this->data, $this->message);
 					break;
 					
 					
-				case 'childview'
+				case 'childview':
 					print $this->views->childView($this->model->getUser(), $this->data, $this->model->getChild(id), $this->message);
 					break;
 					
@@ -165,13 +165,6 @@
 				$this->data = $_POST;
 			}
 		}
-			if (!$this->verifyLogin()) return;
-			
-			if ($error = $this->model->updateTaskCompletionStatus($_POST['id'], $status)) {
-				$this->message = $error;
-			}
-			$this->view = 'tasklist';
-		}*/
 		
 		private function handleAddChild() {
 			if (!$this->verifyLogin()) return;
@@ -286,14 +279,14 @@
 			if (!$this->verifyLogin()) return;
 			
 			$this->$id = $_POST['id'];
-			list($child, $error) - $this->model->getChild($_POST['id']);
+			list($child, $error) = $this->model->getChild($_POST['id']);
 			if($error) {
 				$this->message = $error;
 				$this->view = 'childrenview';
 			}
 			
 			$this->data = $this->$model->readDocuments($_POST['id']);
-			$this->view = 'childview'
+			$this->view = 'childview';
 		}	
 			
 	}
