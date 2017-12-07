@@ -1,6 +1,6 @@
 <?php
 	class FinalProjectViews {
-		private $stylesheet = 'FinalProjectStyle.css';
+		private $stylesheet = 'finalProjectStyle.css';
 		private $pageTitle = 'Permanency Team';
 		
 		public function __construct() {
@@ -18,7 +18,7 @@
 				$body .= "<p class='message'>$message</p>\n";
 			}
 		
-			$body .= "<p><a href='index.php?view=addChildView'>+ Add Child</a>";
+			$body .= "<p><a href='index.php?view=addChildForm'>+ Add Child</a><hr>";
 	
 			if (count($children) < 1) {
 				$body .= "<p>No children to display!</p>\n";
@@ -211,8 +211,11 @@ EOT;
 <link rel="stylesheet" type="text/css" href="{$this->stylesheet}">
 </head>
 <body>
+<div class="col-md-10 offset-md-1">
 $body
+<hr>
 <p>&copy; 2017 Permanency Team. All rights reserved.</p>
+</div>
 </body>
 </html>
 EOT;

@@ -16,7 +16,7 @@
 			$this->model = new FinalProjectModel();
 			$this->views = new FinalProjectViews();
 			
-			$this->view = $_GET['view'] ? $_GET['view'] : 'loginview';
+			$this->view = $_GET['view'] ? $_GET['view'] : 'childrenview';
 			$this->action = $_POST['action'];
 		}
 		
