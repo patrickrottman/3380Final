@@ -59,6 +59,7 @@
             foreach ($documents as $document) {
 				$documentText = $document['documentText'];
                 $uploadTime = $document['uploadTime'];
+                $id = $document['id'];
 			
 				$body .= "<tr>";
 				$body .= "<td>$documentText</td><td>$uploadTime</td>";
@@ -171,7 +172,7 @@ EOT2;
 		public function loginFormView($data = null, $message = '') {
 			$loginID = '';
 			if ($data) {
-				$loginID = $data['loginid'];
+				$username = $data['username'];
 			}
 		
 			$body = "<h1>Tasks</h1>\n";
@@ -184,7 +185,7 @@ EOT2;
 <form action='index.php' method='post'>
 <input type='hidden' name='action' value='login' />
 <p>Username<br />
-  <input type="text" name="loginid" value="$loginID" placeholder="login id" maxlength="255" size="80"></p>
+  <input type="text" name="loginid" value="$username" placeholder="login id" maxlength="255" size="80"></p>
 <p>Password<br />
   <input type="password" name="password" value="" placeholder="password" maxlength="255" size="80"></p>
   <input type="submit" name='submit' value="Login">
