@@ -193,7 +193,7 @@
 					$this->error = "Could not find role. Unable to get children";
 					return array($children, $this->error);
 					break;
-                        }
+			}
 				
 			if (! ($stmt->bind_param("i", $this->user->workerID)) ) {
 				$this->error = "Prepare failed: " . $this->mysqli->error;
@@ -219,6 +219,47 @@
 			
 			return array($children, $this->error);
 		}
+		
+		//selects all the workers for a specific role
+		public function getWorkers($role) {
+			$this->error = '';
+			$workers = array();
+			
+			if (!$this->user) {
+				$this->error = "User not specified. Unable to get workers.";
+				return array($workers, $this->error);
+			}
+		
+			if (! $this->mysqli) {
+				$this->error = "No connection to database.";
+				return array($workers, $this->error);
+			}
+			
+			$stmt = $this->mysqli->prepare("SELECT * FROM workers WHERE role = ?");
+			if (! ($stmt->bind_param("s", $role)) ) {
+				$this->error = "Prepare failed: " . $this->mysqli->error;
+				return array($workers, $this->error);
+			}		
+			
+			if (! $stmt->execute() ) {
+				$this->error = "Execute of statement failed: " . $stmt->error;
+				return array($workers, $this->error);
+			}
+			if (! ($result = $stmt->get_result()) ) {
+				$this->error = "Getting result failed: " . $stmt->error;
+				return array($workers, $this->error);
+			}
+			
+			if ($result->num_rows > 0) {
+				while($row = $result->fetch_assoc()) {
+					array_push($workers, $row);
+				}
+			}
+			
+			$stmt->close();
+			
+			return array($workers, $this->error);
+		}	
 		
 		//gets the info for the selected child so it can be loaded for editing
 		public function getChildForEdit($id) { //$id comes from POST when child is clicked
