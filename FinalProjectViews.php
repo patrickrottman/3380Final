@@ -12,7 +12,7 @@
 		}
 		
 		public function childrenView($user, $children, $message = '') {
-			$body = "<h1>Children for {$user->firstName} {$user->lastName}</h1>\n";
+			$body = "<h2>Children for {$user->firstName} {$user->lastName}</h2>\n";
 		
 			if ($message) {
 				$body .= "<p class='message'>$message</p>\n";

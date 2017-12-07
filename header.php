@@ -4,6 +4,11 @@
     .navbar {
 
         padding-bottom: 0px;
+        margin-bottom: 15px;
+    }
+
+    #logoutButton {
+        margin: 15px 0px 0px 0px;
     }
 
 </style>
@@ -16,7 +21,7 @@
         <ul class="nav justify-content-end">
             <li class="nav-item">
                 <!--<a class="nav-link" href="#">Log Out</a>-->
-                <form action='index.php' method='post'><input class="btn btn-danger" type='submit' name='action' value='logout' /></form>
+                <form action='index.php' method='post'><input class="btn btn-danger" type='submit' name='action' value='logout' id="logoutButton" /></form>
             </li>
         </ul>
     </div>
