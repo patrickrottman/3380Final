@@ -47,3 +47,9 @@ Jenny Zulovich<br>
 |firstName   |varchar(128)  |NO     |       |*NULL*     |               |
 |middleName  |varchar(128)  |YES    |       |*NULL*     |               |
 |lastName    |varchar(128)  |NO     |       |*NULL*     |               |
+
+## Entity Relationship Diagram
+
+## CRUD Explanations
+
+## Video Demonstration
