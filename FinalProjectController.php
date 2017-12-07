@@ -2,7 +2,7 @@
 	require('FinalProjectModel.php');
 	require('FinalProjectViews.php');
 
-	class TasksController {
+	class FinalProjectController {
 		private $model;
 		private $views;
 		
@@ -13,7 +13,7 @@
 		private $id = null;
 	
 		public function __construct() {
-			$this->model = new FinalProjectModelModel();
+			$this->model = new FinalProjectModel();
 			$this->views = new FinalProjectViews();
 			
 			$this->view = $_GET['view'] ? $_GET['view'] : 'childrenview';
@@ -41,7 +41,7 @@
 				case 'logout':
 					$this->handleLogout();
 					break;
-				case 'showchild':
+                case 'showchild':
 					$this->handleShowChild();
 					break;
 				case 'addchild':

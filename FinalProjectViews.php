@@ -64,7 +64,7 @@
 				$body .= "<tr>";
 				$body .= "<td>$documentText</td><td>$uploadTime</td>";
                 $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='edit' /><input type='hidden' name='id' value='$id' /><input type='submit' value='Edit'></form></td>";
-                $body .= "<form action='index.php' method='post'><input type='hidden' name='action' value='delete' /><input type='hidden' name='id' value='$id' /><input type='submit' value='Delete'></form>"
+                $body .= "<form action='index.php' method='post'><input type='hidden' name='action' value='delete' /><input type='hidden' name='id' value='$id' /><input type='submit' value='Delete'></form>";
 				$body .= "</tr>\n";
 			}
 			$body .= "</table>\n";
@@ -170,7 +170,7 @@ EOT2;
 		
 		
 		public function loginFormView($data = null, $message = '') {
-			$loginID = '';
+			$username = '';
 			if ($data) {
 				$username = $data['username'];
 			}
@@ -185,7 +185,7 @@ EOT2;
 <form action='index.php' method='post'>
 <input type='hidden' name='action' value='login' />
 <p>Username<br />
-  <input type="text" name="loginid" value="$username" placeholder="login id" maxlength="255" size="80"></p>
+  <input type="text" name="username" value="$username" placeholder="Username" maxlength="255" size="80"></p>
 <p>Password<br />
   <input type="password" name="password" value="" placeholder="password" maxlength="255" size="80"></p>
   <input type="submit" name='submit' value="Login">
