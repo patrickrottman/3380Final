@@ -17,7 +17,7 @@ Jenny Zulovich<br>
 |firstName            |varchar(128)  |NO     |       |*NULL*     |               |
 |middleName           |varchar(128)  |YES    |       |*NULL*     |               |
 |lastName             |varchar(128)  |NO     |       |*NULL*     |               |
-|dateOfBirth          |date          |YES    |       |*NULL*     |               |
+|dateOfBirth          |varchar(128)  |YES    |       |*NULL*     |               |
 |caseManagerID        |int(11)       |NO     |       |*NULL*     |               |
 |caseWorkerID         |int(11)       |YES    |       |*NULL*     |               |
 |therapistID          |int(11)       |YES    |       |*NULL*     |               |
