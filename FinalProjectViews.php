@@ -26,21 +26,7 @@
 			}
 	
 			$body .= "<table>\n";
-			$body .= "<tr><th>Edit</th>";
-		
-			$columns = array(array('name' => 'firstName', 'label' => 'First Name'), 
-							 array('name' => 'middleName', 'label' => 'Middle Name'), 
-							 array('name' => 'lastName', 'label' => 'lastName'), 
-							 array('name' => 'dateOfBirth', 'label' => 'Date Of Birth'));
-		
-			// geometric shapes in unicode
-			// http://jrgraphix.net/r/Unicode/25A0-25FF
-			//foreach ($columns as $column) {
-				//$name = $column['name'];
-				//$label = $column['label'];
-                
-				//$body .= "<th><a class='order' href='index.php?orderby=$name'>$label</a></th>";
-			//}
+			$body .= "<tr><th>First Name</th><th>Middle Name</th><th>Last Name</th><th>Date of Birth</th><th>Edit</th>";
 	
 			foreach ($children as $child) {
 				$id = $child['id'];
@@ -50,14 +36,39 @@
                 $dateOfBirth = $child['dateOfBirth'];
 			
 				$body .= "<tr>";
-				$body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='edit' /><input type='hidden' name='id' value='$id' /><input type='submit' value='Edit'></form></td>";
-				$body .= "<td>$firstName</td><td>$middleName</td><td>$lastName</td><td>$dateOfBirth</td>;
+				$body .= "<td>$firstName</td><td>$middleName</td><td>$lastName</td><td>$dateOfBirth</td>";
+                $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='edit' /><input type='hidden' name='id' value='$id' /><input type='submit' value='Edit'></form></td>";
 				$body .= "</tr>\n";
 			}
 			$body .= "</table>\n";
 	
 			return $this->page($body);
 		}
+        
+        public function childView($user, $documents, $child, $message = '') {
+            $body = "<h1>Documents for {$child->firstName} {$child->lastName}</h1>\n";
+            
+            if (count($documents) < 1) {
+				$body .= "<p>No documents to display!</p>\n";
+				return $this->page($body);
+			}
+            
+            $body .= "<table>\n";
+            $body .= "<tr><th>Document Text</th><th>Upload Time</th><th>Edit</th><th>Delete</th>";
+            
+            foreach ($documents as $document) {
+				$documentText = $document['documentText'];
+                $uploadTime = $document['uploadTime'];
+			
+				$body .= "<tr>";
+				$body .= "<td>$documentText</td><td>$uploadTime</td>";
+                $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='edit' /><input type='hidden' name='id' value='$id' /><input type='submit' value='Edit'></form></td>";
+                $body .= "<form action='index.php' method='post'><input type='hidden' name='action' value='delete' /><input type='hidden' name='id' value='$id' /><input type='submit' value='Delete'></form>"
+				$body .= "</tr>\n";
+			}
+			$body .= "</table>\n";
+            
+        }
 		
 		public function addChildView($user, $data = null, $message = '') {
 			$firstName = '';
