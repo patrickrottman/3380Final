@@ -357,6 +357,7 @@
 			
 			if (!$this->user) {
 				$this->error = "User not specified. Unable to add child.";
+                echo $this->error;
 				return $this->error;
 			}
 			
@@ -364,6 +365,7 @@
 			$middleName = $data['middleName'];
 			$lastName = $data['lastName'];
 			$dateOfBirth = $data['dateOfBirth'];
+            $caseManagerID = $data['caseManagerID'];
 			$caseWorkerID = $data['caseWorkerID'];
 			$therapistID = $data['therapistID'];
 			$psychiatristID = $data['psychiatristID'];
@@ -375,29 +377,34 @@
 			
 			if (! $firstName) {
 				$this->error = "No first name found for child to add. A first name is required.";
+                echo $this->error;
 				return $this->error;			
 			}
 			
 			if (! $lastName) {
 				$this->error = "No last name found for child to add. A last name is required.";
+                echo $this->error;
 				return $this->error;			
 			}
 				
 			
-			$stmt = $this->mysqli->prepare("INSERT INTO children (firstName, middleName, lastName, DateOfBirth, caseManagerID, caseWorkerID, therapistID, psychiatristID, doctorID, fosterParent1ID, fosterParent2ID, biologicalParent1ID, biologicalParent2ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			$stmt = $this->mysqli->prepare("INSERT INTO children (firstName, middleName, lastName, dateOfBirth, caseManagerID, caseWorkerID, therapistID, psychiatristID, doctorID, fosterParent1ID, fosterParent2ID, biologicalParent1ID, biologicalParent2ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			
-			if (! ($stmt->bind_param("ssssiiiiiiiiii", $firstName, $middleName, $lastName, $dateOfBirth, $this->user->workerID, $caseWorkerID, $therapistID, $psychiatristID, $doctorID, $fosterParent1ID, $fosterParent2ID, $biologicalParent1ID, $biologicalParent2ID)) ) {
+			if (! ($stmt->bind_param("ssssiiiiiiiii", $firstName, $middleName, $lastName, $dateOfBirth, $caseManagerID, $caseWorkerID, $therapistID, $psychiatristID, $doctorID, $fosterParent1ID, $fosterParent2ID, $biologicalParent1ID, $biologicalParent2ID)) ) {
 				$this->error = "Prepare failed: " . $this->mysqli->error;
+                echo $this->error;
 				return $this->error;
 				
 			}
 			if (! $stmt->execute() ) {
 				$this->error = "Execute of statement failed: " . $stmt->error;
+                echo $this->error;
 				return $this->error;
 			}
 			
 			$stmt->close();
-			
+            
+			echo $this->error;
 			return $this->error;
 		}
 		
@@ -496,7 +503,7 @@
 			//change sql statement		
 			$stmt = $this->mysqli->prepare("UPDATE children SET firstName=?, middleName=?, lastName=?, dateOfBirth=?, caseManagerID=?, caseWorkerID=?, therapistID=?, psychiatristID=?, doctorID=?, fosterParent1ID=?, fosterParent2ID=?, biologicalParent1ID=?, biologicalParent2ID=? WHERE id = ?");
 			
-			if (! ($stmt->bind_param("ssssiiiiiiiii", $firstName, $middleName, $lastName, $dateOfBirth, $this->user->workerID, $caseWorkerID, $therapistID, 	$psychiatristID, $doctorID, $fosterParent1ID, $fosterParent2ID, $biologicalParent1ID, $biologicalParent2ID)) ) {
+			if (! ($stmt->bind_param("ssssiiiiiiiii", $firstName, $middleName, $lastName, $dateOfBirth, $this->user->workerID, $caseWorkerID, $therapistID, $psychiatristID, $doctorID, $fosterParent1ID, $fosterParent2ID, $biologicalParent1ID, $biologicalParent2ID)) ) {
 				$this->error = "Prepare failed: " . $this->mysqli->error;
 				return $this->error;
 			}

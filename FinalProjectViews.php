@@ -18,7 +18,7 @@
 				$body .= "<p class='message'>$message</p>\n";
 			}
 		
-			$body .= "<p><a href='index.php?view=addChildForm'>+ Add Child</a><hr>";
+			$body .= "<p><a href='index.php?view=addchildform'>+ Add Child</a><hr>";
 	
 			if (count($children) < 1) {
 				$body .= "<p>No children to display!</p>\n";
@@ -76,7 +76,10 @@
             $middleName = '';
             $lastName = '';
             $dateOfBirth = '';
-            $caseManagerID = '';
+            
+            $caseManagerID = $user->workerID;
+            //user logged in is always the caseManagerID
+            
             $caseWorkerID = '';
             $therapistID = '';
             $psychiatristID = '';
@@ -115,53 +118,52 @@
 			$body .= "<form action='index.php' method='post'>";
 		
 			if ($data['id']) {
-				$body .= "<input type='hidden' name='action' value='update' />";
+				$body .= "<input type='hidden' name='action' value='updatechild ' />";
 				$body .= "<input type='hidden' name='id' value='{$data['id']}' />";
 			} else {
-				$body .= "<input type='hidden' name='action' value='add' />";
+				$body .= "<input type='hidden' name='action' value='addchild' />";
 			}
 		
 			$body .= <<<EOT2
-  <p>Title<br />
-  <input type="text" name="firstName" value="$firstName" placeholder="First Name" maxlength="255" size="80"></p>
+  <p>First Name<br />
+  <input type="text" name="firstName" value="$firstName" placeholder="" maxlength="255" size="80"></p>
   
-  <p>Title<br />
-  <input type="text" name="middleName" value="$middleName" placeholder="Middle Name" maxlength="255" size="80"></p>
+  <p>Middle Name<br />
+  <input type="text" name="middleName" value="$middleName" placeholder="" maxlength="255" size="80"></p>
   
-  <p>Title<br />
-  <input type="text" name="lastName" value="$lastName" placeholder="Last Name" maxlength="255" size="80"></p>
+  <p>Last Name<br />
+  <input type="text" name="lastName" value="$lastName" placeholder="" maxlength="255" size="80"></p>
   
-  <p>Title<br />
-  <input type="text" name="dateOfBirth" value="$dateOfBirth" placeholder="Date Of Birth" maxlength="255" size="80"></p>
+  <p>Date Of Birth<br />
+  <input type="text" name="dateOfBirth" value="$dateOfBirth" placeholder="" maxlength="255" size="80"></p>
   
-  <p>Title<br />
-  <input type="text" name="caseManagerID" value="$caseManagerID" placeholder="Case Manager ID" maxlength="255" size="80"></p>
+  <input type="hidden" name="caseManagerID" value="$caseManagerID" placeholder="" maxlength="255" size="80"></p>
   
-  <p>Title<br />
-  <input type="text" name="caseWorkerID" value="$caseWorkerID" placeholder="Case Worker ID" maxlength="255" size="80"></p>
+  <p>Case Worker<br />
+  <input type="text" name="caseWorkerID" value="$caseWorkerID" placeholder="" maxlength="255" size="80"></p>
   
-  <p>Title<br />
-  <input type="text" name="therapistID" value="$therapistID" placeholder="Therapist ID" maxlength="255" size="80"></p>
+  <p>Therapist<br />
+  <input type="text" name="therapistID" value="$therapistID" placeholder="" maxlength="255" size="80"></p>
   
-  <p>Title<br />
-  <input type="text" name="psychiatristID" value="$psychiatristID" placeholder="Psychiatrist ID" maxlength="255" size="80"></p>
+  <p>Psychiatrist<br />
+  <input type="text" name="psychiatristID" value="$psychiatristID" placeholder="" maxlength="255" size="80"></p>
   
-  <p>Title<br />
-  <input type="text" name="doctorID" value="$doctorID" placeholder="Doctor ID" maxlength="255" size="80"></p>
+  <p>Doctor<br />
+  <input type="text" name="doctorID" value="$doctorID" placeholder="" maxlength="255" size="80"></p>
   
-   <p>Title<br />
-  <input type="text" name="fosterParent1ID" value="$fosterParent1ID" placeholder="Foster Parent1 ID" maxlength="255" size="80"></p>
+   <p>Foster Parent1<br />
+  <input type="text" name="fosterParent1ID" value="$fosterParent1ID" placeholder="" maxlength="255" size="80"></p>
   
-   <p>Title<br />
-  <input type="text" name="fosterParent2ID" value="$fosterParent2ID" placeholder="Foster Parent2 ID" maxlength="255" size="80"></p>
+   <p>Foster Parent2<br />
+  <input type="text" name="fosterParent2ID" value="$fosterParent2ID" placeholder="" maxlength="255" size="80"></p>
   
-  <p>Title<br />
-  <input type="text" name="biologicalParent1ID" value="$biologicalParent1ID" placeholder="Biological Parent1 ID" maxlength="255" size="80"></p>
+  <p>Biological Parent1<br />
+  <input type="text" name="biologicalParent1ID" value="$biologicalParent1ID" placeholder="" maxlength="255" size="80"></p>
   
-  <p>Title<br />
-  <input type="text" name="biologicalParent2ID" value="$biologicalParent2ID" placeholder="Biological Parent2 ID" maxlength="255" size="80"></p>
+  <p>Biological Parent2<br />
+  <input type="text" name="biologicalParent2ID" value="$biologicalParent2ID" placeholder="" maxlength="255" size="80"></p>
   
-  <input type="submit" name='submit' value="Submit"> <input type="submit" name='cancel' value="Cancel">
+  <input type="submit" name='addchild' value="Add Child"> <input type="submit" name='cancel' value="Cancel">
 </form>
 EOT2;
 

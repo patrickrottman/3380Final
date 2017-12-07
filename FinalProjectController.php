@@ -167,19 +167,26 @@
 		}
 		
 		private function handleAddChild() {
-			if (!$this->verifyLogin()) return;
+            //echo $_POST['biologicalParent2ID'];
+			if (!$this->verifyLogin()) 
+            {
+                return;
+            }
 			
 			if ($_POST['cancel']) {
 				$this->view = 'childrenview';
 				return;
 			}
-			
-			$error = $this->model->addChild($_POST);
+            
+			$this->data = $_POST;
+			$error = $this->model->addChild($this->data);
 			if ($error) {
 				$this->message = $error;
 				$this->view = 'addchildform';
 				$this->data = $_POST;
-			}
+			}else{
+                $this->view = 'childrenview';
+            }
 		}
 		
 		private function handleAddDocument() {
@@ -189,13 +196,15 @@
 				$this->view = 'childview';
 				return;
 			}
-			
+            
 			$error = $this->model->addDocument($_POST);
 			if ($error) {
 				$this->message = $error;
 				$this->view = 'adddocumentform';
 				$this->data = $_POST;
-			}
+			}else{
+                $this->view = 'childview';
+            }
 		}
 		
 		private function handleEditChild() {				
@@ -204,11 +213,11 @@
 			list($child, $error) = $this->model->getChild($_POST['id']);
 			if ($error) {
 				$this->message = $error;
-				$this->view = 'childview';
+				$this->view = 'addchildform';
 				return;
 			}
 			$this->data = $child;
-			$this->view = 'addchildform';
+			$this->view = 'childrenview';
 		}
 		
 		private function handleEditDocument() {				
