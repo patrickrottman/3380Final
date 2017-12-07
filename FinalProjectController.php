@@ -2,7 +2,7 @@
 	require('FinalProjectModel.php');
 	require('FinalProjectViews.php');
 
-	class TasksController {
+	class FinalProjectController {
 		private $model;
 		private $views;
 		
@@ -16,7 +16,7 @@
 			$this->model = new FinalProjectModelModel();
 			$this->views = new FinalProjectViews();
 			
-			$this->view = $_GET['view'] ? $_GET['view'] : 'childrenview';
+			$this->view = $_GET['view'] ? $_GET['view'] : 'loginview';
 			$this->action = $_POST['action'];
 		}
 		
