@@ -58,7 +58,7 @@ Create a platform where all members of a foster child’s permanency team would 
 In the application, the user can add a child if they are a case manager and every user can add a document for a child.
 
 #### Read
-Once logged in, the application will display children for a user. They can click on a child and display the documents for the child. The displayed data is read from the data base.
+Once logged in, the application will display children for a user. They can click on a child and display the documents for the child. The displayed data is read from the database.
 
 #### Update
 Users can edit documents that they wrote and update them to the database.
