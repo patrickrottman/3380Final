@@ -18,7 +18,11 @@
 				$body .= "<p class='message'>$message</p>\n";
 			}
 		
-			$body .= "<p><a href='index.php?view=addchildform'>+ Add Child</a><hr>";
+			if($user->role == 'case manager'){
+                $body .= "<p><a href='index.php?view=addchildform'>+ Add Child</a><hr>";
+
+            }
+            
 	
 			if (count($children) < 1) {
 				$body .= "<p>No children to display!</p>\n";
@@ -54,18 +58,23 @@
 			}
             
             $body .= "<table>\n";
-            $body .= "<tr><th>Document Text</th><th>Upload Time</th><th>Edit</th><th>Delete</th>";
+            $body .= "<tr><th>Document Text</th><th>Uploader Name</th><th>Upload Time</th><th>Edit</th><th>Delete</th>";
             
             foreach ($documents as $document) {
 				$documentText = $document['documentText'];
                 $uploadTime = $document['uploadTime'];
                 $docid = $document['docid']; //docid is correct
                 $childID = $document['childID'];
-                
+                $fullName = $document['firstName'] . ' ' . $document['lastName'];
 				$body .= "<tr>";
-				$body .= "<td>$documentText</td><td>$uploadTime</td>";
-                $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='editDocument' /><input type='hidden' name='docid' value='$docid' /><input type='hidden' name='childID' value='$childID' /><input type='submit' value='Edit'></form></td>";
-                $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='deletedocument' /><input type='hidden' name='docid' value='$docid' /><input type='hidden' value='$childID' name='childID'><input type='submit' value='Delete'></form></td>";
+				$body .= "<td>$documentText</td><td>$fullName</td><td>$uploadTime</td>";
+                
+                if($user->workerID == $document['uploaderID']){
+                    $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='editDocument' /><input type='hidden' name='docid' value='$docid' /><input type='hidden' name='childID' value='$childID' /><input type='submit' value='Edit'></form></td>";
+                    $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='deletedocument' /><input type='hidden' name='docid' value='$docid' /><input type='hidden' value='$childID' name='childID'><input type='submit' value='Delete'></form></td>";
+                }
+                
+                
 				$body .= "</tr>\n";
 			}
 			$body .= "</table>\n";
@@ -128,55 +137,103 @@
 				$body .= "<input type='hidden' name='action' value='addchild' />";
 			}
 		
-			$body .= <<<EOT2
-  <p>First Name<br />
-  <input type="text" name="firstName" value="$firstName" placeholder="" maxlength="255" size="80"></p>
+			$body .= '
+  <p>First Name*<br />
+  <input type="text" name="firstName" value="' . $firstName . '" placeholder="" maxlength="255" size="80"></p>
   
   <p>Middle Name<br />
-  <input type="text" name="middleName" value="$middleName" placeholder="" maxlength="255" size="80"></p>
+  <input type="text" name="middleName" value="' . $middleName . '" placeholder="" maxlength="255" size="80"></p>
   
-  <p>Last Name<br />
-  <input type="text" name="lastName" value="$lastName" placeholder="" maxlength="255" size="80"></p>
+  <p>Last Name*<br />
+  <input type="text" name="lastName" value="' . $lastName . '" placeholder="" maxlength="255" size="80"></p>
   
   <p>Date Of Birth<br />
-  <input type="text" name="dateOfBirth" value="$dateOfBirth" placeholder="" maxlength="255" size="80"></p>
+  <input type="text" name="dateOfBirth" value="' . $dateOfBirth . '" placeholder="" maxlength="255" size="80"></p>
   
-  <input type="hidden" name="caseManagerID" value="$caseManagerID" placeholder="" maxlength="255" size="80"></p>
+  <input type="hidden" name="caseManagerID" value="' . $caseManagerID . '" placeholder="" maxlength="255" size="80"></p>';
+            
+            
+  $body .= "<p>Case Worker<br /><select name='caseWorkerID'>";
+  $body.= '<option> </option>';
+        foreach($caseWorkers as $caseworker) {
+            $body .='<option value="'.$caseworker['id'].'">'. $caseworker['firstName'] . ' ' . $caseworker['lastName'] . '</option>';
+  }
+            
+  $body .= "</select>";
   
-  <p>Case Worker<br />
-  <input type="text" name="caseWorkerID" value="$caseWorkerID" placeholder="" maxlength="255" size="80"></p>
-  
-  <p>Therapist<br />
-  <input type="text" name="therapistID" value="$therapistID" placeholder="" maxlength="255" size="80"></p>
-  
-  <p>Psychiatrist<br />
-  <input type="text" name="psychiatristID" value="$psychiatristID" placeholder="" maxlength="255" size="80"></p>
-  
-  <p>Doctor<br />
-  <input type="text" name="doctorID" value="$doctorID" placeholder="" maxlength="255" size="80"></p>
-  
-   <p>Foster Parent1<br />
-  <input type="text" name="fosterParent1ID" value="$fosterParent1ID" placeholder="" maxlength="255" size="80"></p>
-  
-   <p>Foster Parent2<br />
-  <input type="text" name="fosterParent2ID" value="$fosterParent2ID" placeholder="" maxlength="255" size="80"></p>
-  
-  <p>Biological Parent1<br />
-  <input type="text" name="biologicalParent1ID" value="$biologicalParent1ID" placeholder="" maxlength="255" size="80"></p>
-  
-  <p>Biological Parent2<br />
-  <input type="text" name="biologicalParent2ID" value="$biologicalParent2ID" placeholder="" maxlength="255" size="80"></p>
-  
-  <input type="submit" name='submit' value="Submit"> <input type="submit" name='cancel' value="Cancel">
-</form>
-EOT2;
+            
+            
+  $body .= "<p>Therapist<br /><select name='therapistID'>";
+  $body.= '<option> </option>';
+        foreach($therapists as $therapist) {
+            $body .='<option value="'.$therapist['id'].'">' . $therapist['firstName'] . ' ' . $therapist['lastName'] . '</option>';
+  }
+            
+  $body .= "</select>";
+            
+  $body .= "<p>Psychiatrist<br /><select name='psychiatristID'>";
+  $body.= '<option> </option>';
+        foreach($psychiatrists as $psychiatrist) {
+            $body .='<option value="'.$psychiatrist['id'].'">Dr. ' . $psychiatrist['firstName'] . ' ' . $psychiatrist['lastName'] . '</option>';
+  }
+            
+  $body .= "</select>";
+            
+  $body .= "<p>Doctor<br /><select name='doctorID'>";
+  $body.= '<option> </option>';
+        foreach($doctors as $doctor) {
+            $body .='<option value="'.$doctor['id'].'">Dr. ' . $doctor['firstName'] . ' ' . $doctor['lastName'] . '</option>';
+  }
+            
+  $body .= "</select>";
+            
+  $body .= "<p>Foster Parent 1<br /><select name='fosterParent1ID'>";
+  $body.= '<option> </option>';
+        foreach($fosterParents as $fosterParent) {
+            $body .='<option value="'.$fosterParent['id'].'">' . $fosterParent['firstName'] . ' ' . $fosterParent['lastName'] . '</option>';
+  }
+            
+  $body .= "</select>";
+            
+  $body .= "<p>Foster Parent 2<br /><select name='fosterParent2ID'>";
+  $body.= '<option> </option>';
+        foreach($fosterParents as $fosterParent) {
+            $body .='<option value="'.$fosterParent['id'].'">' . $fosterParent['firstName'] . ' ' . $fosterParent['lastName'] . '</option>';
+  }
+            
+  $body .= "</select>";
+            
+  $body .= "<p>Biological Parent 1<br /><select name='biologicalParent1ID'>";
+  $body.= '<option> </option>';
+        foreach($biologicalParents as $biologicalParent) {
+            $body .='<option value="'.$biologicalParent['id'].'">' . $biologicalParent['firstName'] . ' ' . $biologicalParent['lastName'] . '</option>';
+  }
+            
+  $body .= "</select>";
+            
+  $body .= "<p>Biological Parent 2<br /><select name='biologicalParent2ID'>";
+  $body.= '<option> </option>';
+        foreach($biologicalParents as $biologicalParent) {
+            $body .='<option value="'.$biologicalParent['id'].'">' . $biologicalParent['firstName'] . ' ' . $biologicalParent['lastName'] . '</option>';
+  }
+            
+  $body .= "</select>";
+            
+            
 
+            
+            
+            
+  
+  
+  //<input type="text" name="caseWorkerID" value="$caseWorkerID" placeholder="" maxlength="255" size="80"></p>
+            
+  $body .= "<hr><input type='submit' name='submit' value='Submit'> <input type='submit' name='cancel' value='Cancel'></form>";
 			return $this->page($body);
 		}
         
         
         public function addDocumentForm($user, $data = null, $child, $message = '') {
-            echo 'adfa';
 			$docID = '';
             $childID = $child['id'];
             $uploaderID = '';

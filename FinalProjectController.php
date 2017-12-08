@@ -1,6 +1,7 @@
 <?php
 	require('FinalProjectModel.php');
 	require('FinalProjectViews.php');
+    require('header.php');
 
 	class FinalProjectController {
 		private $model;
@@ -121,12 +122,10 @@
                     if($this->id)
                     {
                     list($child, $error) = $this->model->getChild($this->id);
-                    echo 'hey after getChild';
                     if($error) {
                         $this->view = 'childrenview';
                         break;
                     }
-                    echo ' befire form';
 					print $this->views->addDocumentForm($this->model->getUser(), $this->data, $child, $this->message);
                     }else{
                         list($child, $error) = $this->model->getChild($_GET['childid']);
@@ -170,9 +169,11 @@
 		}
 		
 		private function handleLogout() {
-			if ($_POST['logout']) {
+            
+			if ($_POST['action'] == 'logout') {
 				$this->model->logout();
 			}
+            $this->view = 'loginform';
 		}
 		
 		private function handleLogin() {
@@ -190,7 +191,6 @@
 		}
 		
 		private function handleAddChild() {
-            //echo $_POST['biologicalParent2ID'];
 			if (!$this->verifyLogin()) 
             {
                 return;
@@ -217,19 +217,34 @@
 			
 			if ($_POST['cancel']) {
 				$this->view = 'childview';
+                $this->id = $_POST['childID'];
+                list($this->data, $error) = $this->model->readDocuments($_POST['childID']);
+                if($error) {
+				    $this->message = $error;
+				    $this->view = 'childrenview';
+                    return;
+                }
 				return;
 			}
             
-            echo $_POST['childID'] . '<-- childID';
 			$error = $this->model->addDocument($_POST);
-            echo $error;
 			if ($error) {
+                echo $error . '----<error';
 				$this->message = $error;
 				$this->view = 'adddocumentform';
 				$this->data = $_POST;
-			}else{
-                $this->view = 'childview';
-            }
+                return;
+			}
+            
+            $this->id = $_POST['childID'];
+            list($this->data, $error) = $this->model->readDocuments($_POST['childID']);
+            if($error) {
+				$this->message = $error;
+				$this->view = 'childrenview';
+                return;
+			}
+            $this->view = 'childview';
+            
 		}
 		
 		private function handleEditChild() {	
@@ -286,6 +301,13 @@
 			
 			if ($_POST['cancel']) {
 				$this->view = 'childview';
+                $this->id = $_POST['childID'];
+                list($this->data, $error) = $this->model->readDocuments($_POST['childID']);
+                if($error) {
+				    $this->message = $error;
+				    $this->view = 'childrenview';
+                    return;
+                }
 				return;
 			}
 			
@@ -296,14 +318,15 @@
 				return;
 			}
             
+            $this->id = $_POST['childID'];
+            
             list($documents, $error) = $this->model->readDocuments($_POST['childID']);
 			if($error) {
 				$this->message = $error;
 				$this->view = 'childrenview';
+                return;
 			}
-			
-            $this->id = $_POST['childID'];
-            echo $child['id'];
+
             $this->data = $documents;
 			$this->view = 'childview';
 		}
@@ -326,7 +349,6 @@
 			}
 			
             $this->id = $_POST['childID'];
-            echo $child['id'];
             $this->data = $documents;
 			$this->view = 'childview';
 		}

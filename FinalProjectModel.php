@@ -69,8 +69,9 @@
 		
 		//logs out user
 		public function logout() {
-			$this->user = null;
+		$this->user = null;
 			$_SESSION['username'] = '';
+            
 		}
 	
 		
@@ -82,18 +83,16 @@
 			
 			if (!$this->user) {
 				$this->error = "User not specified. Unable to get document.";
-                echo $error;
 				return array($documents, $this->error);
 			}
 		
 			if (! $this->mysqli) {
 				$this->error = "No connection to database.";
-                echo $error;
 				return array($documents, $this->error);
 			}
 
 			//I think this SQL statement gets us what we need
-			$stmt = $this->mysqli->prepare("SELECT documentText, uploadTime, documents.id as 'docid', firstName, lastName, childID FROM documents INNER JOIN workers ON documents.uploaderID = workers.id WHERE childID = ? ORDER BY uploadTime DESC");
+			$stmt = $this->mysqli->prepare("SELECT documentText, uploadTime, documents.id as 'docid', firstName, lastName, uploaderID, childID FROM documents INNER JOIN workers ON documents.uploaderID = workers.id WHERE childID = ? ORDER BY uploadTime DESC");
             
 			if (! ($stmt->bind_param("i", $id)) ) {
 				$this->error = "Prepare failed: " . $this->mysqli->error;
@@ -179,18 +178,22 @@
 					}
 					break;
 				case 'foster parent':
-					$stmt = $this->mysqli->prepare("SELECT * FROM children WHERE fosterParent1ID = ? OR fosterParent2ID = ?");
-					if (! ($stmt->bind_param("ii", $this->user->workerID, $this->user->workerID)) ) {
+                    $escapedID = $this->mysqli->real_escape_string($this->user->workerID);
+                    $sql = "SELECT * FROM children WHERE fosterParent1ID = $escapedID OR fosterParent2ID = $escapedID";
+					/*$stmt = $this->mysqli->prepare("SELECT * FROM children WHERE fosterParent1ID = ? OR fosterParent2ID = ?");
+					if (! ($stmt->bind_param("ii", $this->user->workerID, $id)) ) {
 						$this->error = "Prepare failed: " . $this->mysqli->error;
 						return array($children, $this->error);
-					}
-					break;
+					}*/
+					break; 
 				case 'biological parent':
-					$stmt = $this->mysqli->prepare("SELECT * FROM children WHERE biologicalParent1ID = ? OR biologicalParent2ID = ?");
-					if (! ($stmt->bind_param("ii", $this->user->workerID, $this->user->workerID)) ) {
+                    $escapedID = $this->mysqli->real_escape_string($this->user->workerID);
+                    $sql = "SELECT * FROM children WHERE biologicalParent1ID = $escapedID OR biologicalParent2ID = $escapedID";
+					/*$stmt = $this->mysqli->prepare("SELECT * FROM children WHERE biologicalParent1ID = ? OR biologicalParent2ID = ?");
+					if (! ($stmt->bind_param("ii", $this->user->workerID, $id)) ) {
 						$this->error = "Prepare failed: " . $this->mysqli->error;
 						return array($children, $this->error);
-					}
+					}*/
 					break;
 				default:
 					$this->error = "Could not find role. Unable to get children";
@@ -198,27 +201,44 @@
 					break;
 			}
 				
-			if (! ($stmt->bind_param("i", $this->user->workerID)) ) {
-				$this->error = "Prepare failed: " . $this->mysqli->error;
-				return array($children, $this->error);
-			}		
+            if($role == 'foster parent' or $role == 'biological parent'){
+                if($result = $this->mysqli->query($sql)){
+                    if ($result->num_rows > 0) {
+                        while($row = $result->fetch_assoc()) {
+                            array_push($children, $row);
+                        }
+                    }
+                } else {
+                    $this->error = $this->mysqli->error;
+                    return array($children, $this->error);
+                }
+                
+                
+            } else{
+                
+            
+                if (! ($stmt->bind_param("i", $this->user->workerID)) ) {
+                    $this->error = "Prepare failed: " . $this->mysqli->error;
+                    return array($children, $this->error);
+                }		
 			
-			if (! $stmt->execute() ) {
-				$this->error = "Execute of statement failed: " . $stmt->error;
-				return array($children, $this->error);
-			}
-			if (! ($result = $stmt->get_result()) ) {
-				$this->error = "Getting result failed: " . $stmt->error;
-				return array($children, $this->error);
-			}
-			
-			if ($result->num_rows > 0) {
-				while($row = $result->fetch_assoc()) {
-					array_push($children, $row);
-				}
-			}
-			
-			$stmt->close();
+                if (! $stmt->execute() ) {
+                    $this->error = "Execute of statement failed: " . $stmt->error;
+                    return array($children, $this->error);
+                }
+                if (! ($result = $stmt->get_result()) ) {
+                    $this->error = "Getting result failed: " . $stmt->error;
+                    return array($children, $this->error);
+                }
+
+                if ($result->num_rows > 0) {
+                    while($row = $result->fetch_assoc()) {
+                        array_push($children, $row);
+                    }
+                }
+
+                $stmt->close();
+            }
 			
 			return array($children, $this->error);
 		}
@@ -278,7 +298,6 @@
 				$this->error = "No connection to database.";
 				return array($child, $this->error);
 			}
-			            echo 'hey from model';
 
 			if (! $id) {
 				$this->error = "No id specified for child to retrieve.";
@@ -361,7 +380,6 @@
 			
 			if (!$this->user) {
 				$this->error = "User not specified. Unable to add child.";
-                echo $this->error;
 				return $this->error;
 			}
 			
@@ -381,13 +399,11 @@
 			
 			if (! $firstName) {
 				$this->error = "No first name found for child to add. A first name is required.";
-                echo $this->error;
 				return $this->error;			
 			}
 			
 			if (! $lastName) {
 				$this->error = "No last name found for child to add. A last name is required.";
-                echo $this->error;
 				return $this->error;			
 			}
 				
@@ -396,19 +412,16 @@
 			
 			if (! ($stmt->bind_param("ssssiiiiiiiii", $firstName, $middleName, $lastName, $dateOfBirth, $caseManagerID, $caseWorkerID, $therapistID, $psychiatristID, $doctorID, $fosterParent1ID, $fosterParent2ID, $biologicalParent1ID, $biologicalParent2ID)) ) {
 				$this->error = "Prepare failed: " . $this->mysqli->error;
-                echo $this->error;
 				return $this->error;
 				
 			}
 			if (! $stmt->execute() ) {
 				$this->error = "Execute of statement failed: " . $stmt->error;
-                echo $this->error;
 				return $this->error;
 			}
 			
 			$stmt->close();
             
-			echo $this->error;
 			return $this->error;
 		}
 		
