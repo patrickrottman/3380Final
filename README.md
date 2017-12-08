@@ -51,7 +51,7 @@ Create a platform where all members of a foster child’s permanency team would 
 |lastName    |varchar(128)  |NO     |       |*NULL*     |               |
 
 ## Entity Relationship Diagram
-![alt text](https://github.com/patrickrottman/3380Final/blob/master/FinalProjectERD.png "ERD")
+![alt text](https://github.com/patrickrottman/3380Final/blob/master/ERD.png "ERD")
 
 ## CRUD Explanations
 #### Create
