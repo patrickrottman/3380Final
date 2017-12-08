@@ -424,10 +424,9 @@
 			$childID = $data['childID'];
 			$documentText = $data['documentText'];
 			
-			
 			if (! $childID) {
 				$this->error = "No child id found for note to add. A child id is required.";
-				return $this->error;			
+				return $this->error;	
 			}
 			
 			if (! $documentText) {
@@ -435,15 +434,13 @@
 				return $this->error;			
 			}
 				
-			
-			$stmt = $this->mysqli->prepare("INSERT INTO documents (childID, uploaderID, documentText, uploadTime) values (?, ?, ?, NOW()");
-			
+			$stmt = $this->mysqli->prepare("INSERT INTO documents (childID, uploaderID, documentText, uploadTime) values (?, ?, ?, NOW())");
+            
 			if (! ($stmt->bind_param("iis", $childID, $this->user->workerID, $documentText)) ) {
 				$this->error = "Prepare failed: " . $this->mysqli->error;
 				return $this->error;
 				
 			}
-			
 			if (! $stmt->execute() ) {
 				$this->error = "Execute of statement failed: " . $stmt->error;
 				return $this->error;

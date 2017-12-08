@@ -118,6 +118,8 @@
 					
 					
 				case 'adddocumentform':
+                    if($this->id)
+                    {
                     list($child, $error) = $this->model->getChild($this->id);
                     echo 'hey after getChild';
                     if($error) {
@@ -126,6 +128,14 @@
                     }
                     echo ' befire form';
 					print $this->views->addDocumentForm($this->model->getUser(), $this->data, $child, $this->message);
+                    }else{
+                        list($child, $error) = $this->model->getChild($_GET['childid']);
+                        if($error) {
+                        $this->view = 'childrenview';
+                        break;
+                        }
+                        print $this->views->addDocumentForm($this->model->getUser(), null, $child, $this->message);
+                    }
 					break;
 					
 					
@@ -210,7 +220,9 @@
 				return;
 			}
             
+            echo $_POST['childID'] . '<-- childID';
 			$error = $this->model->addDocument($_POST);
+            echo $error;
 			if ($error) {
 				$this->message = $error;
 				$this->view = 'adddocumentform';

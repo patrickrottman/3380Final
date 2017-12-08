@@ -46,7 +46,8 @@
 		}
         
         public function childView($user, $documents, $child, $message = '') {
-            $body = "<h1>Documents for {$child['firstName']} {$child['lastName']}</h1>\n";
+            $body = "<p><a href='index.php?view=adddocumentform&childid={$child['id']}'>+ Add Document</a><hr>";
+            $body .= "<h1>Documents for {$child['firstName']} {$child['lastName']}</h1>\n";
             if (count($documents) < 1) {
 				$body .= "<p>No documents to display!</p>\n";
 				return $this->page($body);
@@ -177,7 +178,7 @@ EOT2;
         public function addDocumentForm($user, $data = null, $child, $message = '') {
             echo 'adfa';
 			$docID = '';
-            $childID = '';
+            $childID = $child['id'];
             $uploaderID = '';
             $documentText = '';
             $uploadTime = '';
