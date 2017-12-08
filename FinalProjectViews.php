@@ -68,7 +68,6 @@
                 $fullName = $document['firstName'] . ' ' . $document['lastName'];
 				$body .= "<tr>";
 				$body .= "<td>$documentText</td><td>$fullName</td><td>$uploadTime</td>";
-                
                 if($user->workerID == $document['uploaderID']){
                     $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='editDocument' /><input type='hidden' name='docid' value='$docid' /><input type='hidden' name='childID' value='$childID' /><input type='submit' value='Edit'></form></td>";
                     $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='deletedocument' /><input type='hidden' name='docid' value='$docid' /><input type='hidden' value='$childID' name='childID'><input type='submit' value='Delete'></form></td>";
