@@ -18,7 +18,11 @@
 				$body .= "<p class='message'>$message</p>\n";
 			}
 		
-			$body .= "<p><a href='index.php?view=addchildform'>+ Add Child</a><hr>";
+			if($user->role == 'case manager'){
+                $body .= "<p><a href='index.php?view=addchildform'>+ Add Child</a><hr>";
+
+            }
+            
 	
 			if (count($children) < 1) {
 				$body .= "<p>No children to display!</p>\n";
@@ -64,8 +68,13 @@
                 
 				$body .= "<tr>";
 				$body .= "<td>$documentText</td><td>$uploadTime</td>";
-                $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='editDocument' /><input type='hidden' name='docid' value='$docid' /><input type='hidden' name='childID' value='$childID' /><input type='submit' value='Edit'></form></td>";
-                $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='deletedocument' /><input type='hidden' name='docid' value='$docid' /><input type='hidden' value='$childID' name='childID'><input type='submit' value='Delete'></form></td>";
+                
+                if($user->workerID == $document->uploaderID){
+                    $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='editDocument' /><input type='hidden' name='docid' value='$docid' /><input type='hidden' name='childID' value='$childID' /><input type='submit' value='Edit'></form></td>";
+                    $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='deletedocument' /><input type='hidden' name='docid' value='$docid' /><input type='hidden' value='$childID' name='childID'><input type='submit' value='Delete'></form></td>";
+                }
+                
+                
 				$body .= "</tr>\n";
 			}
 			$body .= "</table>\n";
