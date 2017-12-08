@@ -69,8 +69,9 @@
 		
 		//logs out user
 		public function logout() {
-			$this->user = null;
+		$this->user = null;
 			$_SESSION['username'] = '';
+            
 		}
 	
 		
@@ -93,7 +94,7 @@
 			}
 
 			//I think this SQL statement gets us what we need
-			$stmt = $this->mysqli->prepare("SELECT documentText, uploadTime, documents.id as 'docid', firstName, lastName, childID FROM documents INNER JOIN workers ON documents.uploaderID = workers.id WHERE childID = ? ORDER BY uploadTime DESC");
+			$stmt = $this->mysqli->prepare("SELECT documentText, uploadTime, documents.id as 'docid', firstName, lastName, uploaderID, childID FROM documents INNER JOIN workers ON documents.uploaderID = workers.id WHERE childID = ? ORDER BY uploadTime DESC");
             
 			if (! ($stmt->bind_param("i", $id)) ) {
 				$this->error = "Prepare failed: " . $this->mysqli->error;
