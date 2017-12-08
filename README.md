@@ -6,7 +6,9 @@ Andrew Muenks<br>
 Patrick Rottman<br>
 Jenny Zulovich<br>
 
-## Description
+## Purpose
+
+Create a platform where all members of a foster child’s permanency team would be able to share documents/notes. Within the system, there would be many roles, namely case managers, case workers, therapists, psychiatrists, doctors, foster parents, and biological parents.  Then, each member of that group would be able to upload documents with their notes (incident reports, memos, doctor’s notes) and the other members of the permanency team would also be able to see those documents. Currently, there is a problem with communication among permanency teams, so creating a separate platform to upload pertinent documents for a child would be useful, where a user would simply upload a document for a child, and all the other people who might need access would get it to show up automatically. 
 
 ## Table Schemas
 
@@ -52,5 +54,17 @@ Jenny Zulovich<br>
 ![alt text](https://github.com/patrickrottman/3380Final/blob/master/FinalProjectERD.png "ERD")
 
 ## CRUD Explanations
+#### Create
+In the application, the user can add a child if they are a case manager and every user can add a document for a child.
+
+#### Read
+Once logged in, the application will display children for a user. They can click on a child and display the documents for the child. The displayed data is read from the data base.
+
+#### Update
+Users can edit documents that they wrote and update them to the database.
+
+#### Delete
+Users can delete documents from the database if they are the ones who wrote them.
+
 
 ## Video Demonstration
