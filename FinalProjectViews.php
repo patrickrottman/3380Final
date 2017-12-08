@@ -26,7 +26,7 @@
 			}
 	
 			$body .= "<table>\n";
-			$body .= "<tr><th>First Name</th><th>Middle Name</th><th>Last Name</th><th>Date of Birth</th><th>Edit</th>";
+			$body .= "<tr><th>First Name</th><th>Middle Name</th><th>Last Name</th><th>Date of Birth</th><th>See More</th>";
 	
 			foreach ($children as $child) {
 				$id = $child['id'];
@@ -37,7 +37,7 @@
 			
 				$body .= "<tr>";
 				$body .= "<td>$firstName</td><td>$middleName</td><td>$lastName</td><td>$dateOfBirth</td>";
-                $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='edit' /><input type='hidden' name='id' value='$id' /><input type='submit' value='Edit'></form></td>";
+                $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='showchild' /><input type='hidden' name='id' value='$id' /><input type='submit' name='submit' value='Documents'></form></td>";
 				$body .= "</tr>\n";
 			}
 			$body .= "</table>\n";
@@ -46,8 +46,7 @@
 		}
         
         public function childView($user, $documents, $child, $message = '') {
-            $body = "<h1>Documents for {$child->firstName} {$child->lastName}</h1>\n";
-            
+            $body = "<h1>Documents for {$child['firstName']} {$child['lastName']}</h1>\n";
             if (count($documents) < 1) {
 				$body .= "<p>No documents to display!</p>\n";
 				return $this->page($body);
@@ -59,19 +58,22 @@
             foreach ($documents as $document) {
 				$documentText = $document['documentText'];
                 $uploadTime = $document['uploadTime'];
-                $id = $document['id'];
-			
+                $docid = $document['docid']; //docid is correct
+                $childID = $document['childID'];
+                
 				$body .= "<tr>";
 				$body .= "<td>$documentText</td><td>$uploadTime</td>";
-                $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='edit' /><input type='hidden' name='id' value='$id' /><input type='submit' value='Edit'></form></td>";
-                $body .= "<form action='index.php' method='post'><input type='hidden' name='action' value='delete' /><input type='hidden' name='id' value='$id' /><input type='submit' value='Delete'></form>";
+                $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='editDocument' /><input type='hidden' name='docid' value='$docid' /><input type='hidden' name='childID' value='$childID' /><input type='submit' value='Edit'></form></td>";
+                $body .= "<td><form action='index.php' method='post'><input type='hidden' name='action' value='deletedocument' /><input type='hidden' name='docid' value='$docid' /><input type='hidden' value='$childID' name='childID'><input type='submit' value='Delete'></form></td>";
 				$body .= "</tr>\n";
 			}
 			$body .= "</table>\n";
             
+            return $this->page($body);
+            
         }
 		
-		public function addChildView($user, $data = null, $message = '') {
+		public function addChildView($user, $caseWorkers = null, $therapists = null, $psychiatrists = null, $doctors = null, $fosterParents = null, $biologicalParents = null, $data = null, $message = '') {
 			$firstName = '';
             $middleName = '';
             $lastName = '';
@@ -104,6 +106,7 @@
                 $biologicalParent1ID = $data['biologicalParent1ID'];
                 $biologicalParent2ID = $data['biologicalParent2ID'];
 			}
+            
 	       if($data)
            {
                 $body = "<h1>Edit child for {$user->firstName} {$user->lastName}</h1>\n";
@@ -163,7 +166,57 @@
   <p>Biological Parent2<br />
   <input type="text" name="biologicalParent2ID" value="$biologicalParent2ID" placeholder="" maxlength="255" size="80"></p>
   
-  <input type="submit" name='addchild' value="Add Child"> <input type="submit" name='cancel' value="Cancel">
+  <input type="submit" name='submit' value="Submit"> <input type="submit" name='cancel' value="Cancel">
+</form>
+EOT2;
+
+			return $this->page($body);
+		}
+        
+        
+        public function addDocumentForm($user, $data = null, $child, $message = '') {
+            echo 'adfa';
+			$docID = '';
+            $childID = '';
+            $uploaderID = '';
+            $documentText = '';
+            $uploadTime = '';
+			
+			if ($data) {
+				$docID = $data['id'];
+				$childID = $data['childID'];
+				$uploaderID = $data['uploadID'];
+				$documentText = $data['documentText'];
+                $uploadTime = $data['uploadTime'];
+			}
+            
+	        if($data)
+            {
+                $body = "<h1>Edit Document for {$child['firstName']} {$child['lastName']}</h1>\n";
+            }else{
+                $body = "<h1>Add Document for {$child['firstName']} {$child['lastName']}</h1>\n";
+            }
+
+			if ($message) {
+				$body .= "<p class='message'>$message</p>\n";
+			}
+		
+			$body .= "<form action='index.php' method='post'>";
+		
+			if ($data['id']) {
+				$body .= "<input type='hidden' name='action' value='updateDocument' />";
+				$body .= "<input type='hidden' name='id' value='{$data['id']}' />";
+			} else {
+				$body .= "<input type='hidden' name='action' value='adddocument' />";
+			}
+		
+			$body .= <<<EOT2
+            
+  <p>Description<br />
+  <input type="hidden" value="$docID" name="docID">
+  <input type="hidden" value="$childID" name="childID">
+  <textarea name="documentText" rows="6" cols="80">$documentText</textarea></p>
+  <input type="submit" name='submit' value="Submit"> <input type="submit" name='cancel' value="Cancel">
 </form>
 EOT2;
 

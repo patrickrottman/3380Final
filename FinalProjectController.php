@@ -42,7 +42,7 @@
 					$this->handleLogout();
 					break;
                 case 'showchild':
-					$this->handleShowChild();
+					$this->handleShowChildDocuments();
 					break;
 				case 'addchild':
 					$this->handleAddChild();
@@ -51,7 +51,7 @@
 					$this->handleEditChild();
 					break;
 				case 'updatechild':
-					$this->handleUpDateChild();
+					$this->handleUpdateChild();
 					break;
 				case 'adddocument':
 					$this->handleAddDocument();
@@ -118,12 +118,25 @@
 					
 					
 				case 'adddocumentform':
-					print $this->views->addDocumentView($this->model->getUser(), $this->data, $this->message);
+                    list($child, $error) = $this->model->getChild($this->id);
+                    echo 'hey after getChild';
+                    if($error) {
+                        $this->view = 'childrenview';
+                        break;
+                    }
+                    echo ' befire form';
+					print $this->views->addDocumentForm($this->model->getUser(), $this->data, $child, $this->message);
 					break;
 					
 					
 				case 'childview':
-					print $this->views->childView($this->model->getUser(), $this->data, $this->model->getChild(id), $this->message);
+                    list($child, $error) = $this->model->getChild($this->id);
+                    if($error) {
+                        $this->view = 'childrenview';
+                        break;
+                    }
+                        
+					print $this->views->childView($this->model->getUser(), $this->data, $child,  $this->message);
 					break;
 					
 					
@@ -174,18 +187,18 @@
             }
 			
 			if ($_POST['cancel']) {
-				$this->view = 'childrenview';
+				header('Location: index.php');
 				return;
 			}
             
-			$this->data = $_POST;
-			$error = $this->model->addChild($this->data);
+			$error = $this->model->addChild($_POST);
 			if ($error) {
 				$this->message = $error;
 				$this->view = 'addchildform';
 				$this->data = $_POST;
 			}else{
-                $this->view = 'childrenview';
+                header('Location: index.php');
+                //$this->view = 'childrenview';
             }
 		}
 		
@@ -207,29 +220,33 @@
             }
 		}
 		
-		private function handleEditChild() {				
-			if (!$this->verifyLogin()) return;
-			
+		private function handleEditChild() {	
+			if (!$this->verifyLogin())
+            {
+                return;
+            }
 			list($child, $error) = $this->model->getChild($_POST['id']);
 			if ($error) {
 				$this->message = $error;
-				$this->view = 'addchildform';
+				$this->view = 'childrenview';
 				return;
 			}
+            
 			$this->data = $child;
-			$this->view = 'childrenview';
+			$this->view = 'addchildform';
 		}
 		
 		private function handleEditDocument() {				
 			if (!$this->verifyLogin()) return;
-			
-			list($child, $error) = $this->model->getDocumentForEdit($_POST['id']);
+			list($document, $error) = $this->model->getDocumentForEdit($_POST['docid']);
+            
 			if ($error) {
 				$this->message = $error;
 				$this->view = 'childview';
 				return;
 			}
-			$this->data = $child;
+			$this->data = $document;
+            $this->id = $_POST['childID'];
 			$this->view = 'adddocumentform';
 		}
 		
@@ -266,35 +283,60 @@
 				$this->data = $_POST;
 				return;
 			}
+            
+            list($documents, $error) = $this->model->readDocuments($_POST['childID']);
+			if($error) {
+				$this->message = $error;
+				$this->view = 'childrenview';
+			}
 			
+            $this->id = $_POST['childID'];
+            echo $child['id'];
+            $this->data = $documents;
 			$this->view = 'childview';
 		}
 		
 		private function handleDeleteDocument() {
 			if (!$this->verifyLogin()) return;
 			
-			if ($error = $this->model->deleteDocument($_POST['id'])) {
+            list($child, $error) = $this->model->deleteDocument($_POST['docid']);
+			if ($error) {
 				$this->message = $error;
 				$this->view = 'childview';
 				$this->data = $_POST;
 				return;
 			}
 			
+			list($documents, $error) = $this->model->readDocuments($_POST['childID']);
+			if($error) {
+				$this->message = $error;
+				$this->view = 'childrenview';
+			}
+			
+            $this->id = $_POST['childID'];
+            echo $child['id'];
+            $this->data = $documents;
 			$this->view = 'childview';
 		}
 			
 		
 		private function handleShowChildDocuments() {
 			if (!$this->verifyLogin()) return;
-			
-			$this->$id = $_POST['id'];
+            
+			$this->id = $_POST['id'];
+            
 			list($child, $error) = $this->model->getChild($_POST['id']);
 			if($error) {
 				$this->message = $error;
 				$this->view = 'childrenview';
 			}
 			
-			$this->data = $this->$model->readDocuments($_POST['id']);
+			list($this->data, $error) = $this->model->readDocuments($_POST['id']);
+            if($error) {
+				$this->message = $error;
+				$this->view = 'childrenview';
+			}
+            
 			$this->view = 'childview';
 		}	
 			

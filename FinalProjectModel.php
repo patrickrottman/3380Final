@@ -76,21 +76,25 @@
 		
 		//gets list of documents for selected child to display for user
 		public function readDocuments($id) { //$id comes from POST when child is clicked, id is childID
-			$this->error = '';
+			
+            $this->error = '';
 			$documents = array();
 			
 			if (!$this->user) {
 				$this->error = "User not specified. Unable to get document.";
+                echo $error;
 				return array($documents, $this->error);
 			}
 		
 			if (! $this->mysqli) {
 				$this->error = "No connection to database.";
+                echo $error;
 				return array($documents, $this->error);
 			}
 
 			//I think this SQL statement gets us what we need
-			$stmt = $this->mysqli->prepare("SELECT * FROM documents INNER JOIN workers ON documents.uploaderID = workers.workerID WHERE childID = ? ORDER BY uploadTime DESC");
+			$stmt = $this->mysqli->prepare("SELECT documentText, uploadTime, documents.id as 'docid', firstName, lastName, childID FROM documents INNER JOIN workers ON documents.uploaderID = workers.id WHERE childID = ? ORDER BY uploadTime DESC");
+            
 			if (! ($stmt->bind_param("i", $id)) ) {
 				$this->error = "Prepare failed: " . $this->mysqli->error;
 				return array($documents, $this->error);
@@ -112,7 +116,6 @@
 			}
 			
 			$stmt->close();
-			
 			return array($documents, $this->error);
 		}
 		
@@ -275,13 +278,14 @@
 				$this->error = "No connection to database.";
 				return array($child, $this->error);
 			}
-			
+			            echo 'hey from model';
+
 			if (! $id) {
 				$this->error = "No id specified for child to retrieve.";
 				return array($child, $this->error);
 			}
 			
-			
+
 			$stmt = $this->mysqli->prepare("SELECT * FROM children WHERE id = ?");
 			
 			if (! ($stmt->bind_param("i", $id)) ) {
@@ -365,7 +369,7 @@
 			$middleName = $data['middleName'];
 			$lastName = $data['lastName'];
 			$dateOfBirth = $data['dateOfBirth'];
-            $caseManagerID = $data['caseManagerID'];
+            $caseManagerID = $this->user->workerID;
 			$caseWorkerID = $data['caseWorkerID'];
 			$therapistID = $data['therapistID'];
 			$psychiatristID = $data['psychiatristID'];
@@ -503,7 +507,7 @@
 			//change sql statement		
 			$stmt = $this->mysqli->prepare("UPDATE children SET firstName=?, middleName=?, lastName=?, dateOfBirth=?, caseManagerID=?, caseWorkerID=?, therapistID=?, psychiatristID=?, doctorID=?, fosterParent1ID=?, fosterParent2ID=?, biologicalParent1ID=?, biologicalParent2ID=? WHERE id = ?");
 			
-			if (! ($stmt->bind_param("ssssiiiiiiiii", $firstName, $middleName, $lastName, $dateOfBirth, $this->user->workerID, $caseWorkerID, $therapistID, $psychiatristID, $doctorID, $fosterParent1ID, $fosterParent2ID, $biologicalParent1ID, $biologicalParent2ID)) ) {
+			if (! ($stmt->bind_param("ssssiiiiiiiiii", $firstName, $middleName, $lastName, $dateOfBirth, $this->user->workerID, $caseWorkerID, $therapistID, $psychiatristID, $doctorID, $fosterParent1ID, $fosterParent2ID, $biologicalParent1ID, $biologicalParent2ID, $id)) ) {
 				$this->error = "Prepare failed: " . $this->mysqli->error;
 				return $this->error;
 			}
@@ -570,7 +574,7 @@
 		//deletes document with provided document id from documents table
 		public function deleteDocument($id) { //id comes from POST when button is clicked
 			$this->error = '';
-			
+
 			if (!$this->user) {
 				$this->error = "User not specified. Unable to delete document.";
 				return $this->error;
@@ -597,6 +601,7 @@
 				$this->error = "Execute of statement failed: " . $stmt->error;
 				return $this->error;
 			}
+            
 			
 			$stmt->close();
 			
