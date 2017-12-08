@@ -173,6 +173,8 @@
 			if ($_POST['logout']) {
 				$this->model->logout();
 			}
+            
+            $this->view = 'loginform';
 		}
 		
 		private function handleLogin() {
