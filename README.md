@@ -49,6 +49,7 @@ Jenny Zulovich<br>
 |lastName    |varchar(128)  |NO     |       |*NULL*     |               |
 
 ## Entity Relationship Diagram
+![alt text](https://github.com/patrickrottman/3380Final/blob/master/FinalProjectERD.png "ERD")
 
 ## CRUD Explanations
 
