@@ -74,10 +74,10 @@ https://youtu.be/FFslj8-s6Kc
 dale.patrickrottman.com
 
 ## Sample Usernames and Passwords
-# Case Managers:
+### Case Managers:
 * Username: sburnett, Password: password
 * Username: amorin, Password: password
-# Other workers:
+### Other workers:
 * Username: jbrose, Password: password
 * Username: bwyatt, Password: password
 
