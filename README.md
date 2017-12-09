@@ -69,3 +69,16 @@ Users can delete documents from the database if they are the ones who wrote them
 
 ## Video Demonstration
 https://youtu.be/FFslj8-s6Kc
+
+## URL
+dale.patrickrottman.com
+
+## Sample Usernames and Passwords
+# Case Managers:
+* Username: sburnett, Password: password
+* Username: amorin, Password: password
+# Other workers:
+* Username: jbrose, Password: password
+* Username: bwyatt, Password: password
+
+
